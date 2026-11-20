@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "strainscope"
+version = "0.1.0"
+description = "Strain maps from atomic-resolution images that check their own answers (geometric phase analysis)."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Onyinye Ukagha"}]
+requires-python = ">=3.9"
+dependencies = ["numpy", "scipy"]
+
+[project.optional-dependencies]
+demo = ["matplotlib"]
+test = ["pytest", "matplotlib"]
+
+[tool.setuptools]
+packages = ["strainscope"]
