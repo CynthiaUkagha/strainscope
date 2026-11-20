@@ -25,6 +25,19 @@ def _peak_snr(res, g):
     return best[2] / res.fft_background
 
 
+def _reference_spread(res):
+    rs, cs = res.reference
+    ym = (rs.start + rs.stop) // 2
+    xm = (cs.start + cs.stop) // 2
+    quarters = [(slice(rs.start, ym), slice(cs.start, xm)), (slice(rs.start, ym), slice(xm, cs.stop)),
+                (slice(ym, rs.stop), slice(cs.start, xm)), (slice(ym, rs.stop), slice(xm, cs.stop))]
+    spread = 0.0
+    for comp in (res.exx, res.eyy):
+        means = [comp[q].mean() for q in quarters]
+        spread = max(spread, max(means) - min(means))
+    return float(spread)
+
+
 def run_checks(res, closure_review=0.35, closure_fail=0.8):
     checks = []
 
@@ -48,10 +61,12 @@ def run_checks(res, closure_review=0.35, closure_fail=0.8):
         PASS if ratio <= 0.3 else REVIEW if ratio <= 0.45 else FAIL,
         "A mask that overlaps neighbouring peaks mixes their phases."))
 
-    ref_sd = max(res.exx[res.reference].std(), res.eyy[res.reference].std())
+    # Compare the mean strain in the four quarters of the reference region.
+    # Random noise averages out of the quarter means; a real gradient does not.
+    spread = _reference_spread(res)
     checks.append(Check(
-        "Reference flatness", f"{ref_sd * 100:.2f}% strain s.d.",
-        PASS if ref_sd <= 0.003 else REVIEW if ref_sd <= 0.01 else FAIL,
+        "Reference flatness", f"{spread * 100:.2f}% spread between quarters",
+        PASS if spread <= 0.003 else REVIEW if spread <= 0.01 else FAIL,
         "The 'unstrained' reference region should actually be flat."))
 
     r = phase_closure_residual(res)[res.interior]

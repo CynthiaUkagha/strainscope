@@ -62,6 +62,14 @@ def test_closure_check_independent_of_g_sign():
         assert closure.status == "PASS"
 
 
+def test_noise_alone_does_not_fail_reference_flatness():
+    # Random noise averages out; only a real gradient should fail this check.
+    img, _, ref = _step_case(eps=0.02, noise=1.2, seed=3)
+    _, checks = run_checks(gpa(img, reference=ref))
+    flat = next(c for c in checks if c.name == "Reference flatness")
+    assert flat.status != "FAIL"
+
+
 def test_pure_noise_fails():
     rng = np.random.default_rng(1)
     img = rng.standard_normal(SHAPE)

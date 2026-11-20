@@ -15,7 +15,7 @@ GPA has a catch. It always returns a strain map, even for an image with no latti
 | Lattice peak strength | Images too noisy for the phase to mean anything |
 | g-vector angle | Nearly parallel reflections that make the 2D strain tensor unstable |
 | Mask size | Masks that overlap neighbouring peaks and mix their phases |
-| Reference flatness | A "strain-free" reference region that is not actually flat |
+| Reference flatness | A "strain-free" reference region that is not actually flat. It compares the region's four quarters, so random noise averages out and a real gradient does not |
 | Phase closure | A third reflection (g1 ± g2) that disagrees with the other two. This is an independent test the strain fit cannot pass by luck |
 | Dislocation cores | Phase vortices where the map is no longer elastic strain |
 
@@ -26,13 +26,14 @@ Every test image is simulated from a known displacement field, so the right answ
 | Input | Grade | Flagged by |
 |---|---|---|
 | Strained lattice, clean | **PASS** | all checks pass |
-| Strained lattice + dislocation | **REVIEW** | reference flatness, dislocation cores |
+| Strained lattice + dislocation | **FAIL** | reference flatness, dislocation cores |
 | Very noisy lattice | **FAIL** | lattice peak strength, reference flatness, phase closure |
 | Pure noise (no lattice) | **FAIL** | lattice peak strength, reference flatness, phase closure, dislocation cores |
 
 - **Accuracy:** without noise, the measured strain profile matches the known strain (at GPA's spatial resolution) to better than 0.01% strain.
 - **Precision:** with realistic noise, row-averaged profiles stay within about 0.3% rms.
 - **A bug the checks caught:** the phase-closure check first failed on a clean image. The cause was a real bug. It compared against g1+g2 when the second vector's sign meant the lattice actually had g1−g2. The tool now picks whichever reflection exists, and a regression test covers both signs.
+- **A second fix, found by [ToolTrap](https://github.com/CynthiaUkagha/tooltrap):** the first flatness check used pixel scatter, so it rejected noisy images that were still measurable. Comparing quarter averages separates noise from a real gradient.
 
 ## Quick start
 
