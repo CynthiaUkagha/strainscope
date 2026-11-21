@@ -75,6 +75,6 @@ Method: Hÿtch, Snoeck & Kilaas, *Ultramicroscopy* 74 (1998) 131–146.
 ## Author
 
 **Onyinye Ukagha**, materials scientist working on electron microscopy, X-ray diffraction and self-checking scientific software.
-[Website](https://cynthiaukagha.github.io) · [LinkedIn](https://www.linkedin.com/in/cynthiaukagha/)
+[Website](https://cynthiaukagha.github.io) · [LinkedIn](https://www.linkedin.com/in/onyinyeukagha/)
 
 MIT License
