@@ -1,5 +1,7 @@
 # StrainScope
 
+[![tests](https://github.com/CynthiaUkagha/strainscope/actions/workflows/tests.yml/badge.svg)](https://github.com/CynthiaUkagha/strainscope/actions/workflows/tests.yml)
+
 **Strain maps from atomic-resolution microscope images that check their own answers.**
 
 ![Overview](docs/overview.png)
